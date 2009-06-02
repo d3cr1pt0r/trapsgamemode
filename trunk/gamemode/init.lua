@@ -14,7 +14,7 @@ resource.AddFile("materials/traps/trap_testing.vmt")
 resource.AddFile("materials/traps/trap_testing.vtf")
 
 /*---------------------------------------------------------
-Some shit
+Display some help in the chat field
 ---------------------------------------------------------*/
 timer.Create( "adverts", 120, 0, function()
 	for k,v in pairs(player.GetAll()) do
@@ -257,9 +257,23 @@ function GM:CanPlayerSuicide( ply )
 end
 
 function GM:CanTool( ply, tr, toolmode )
-	if (toolmode == "adv_duplicator") then
-		ply:ChatPrint("Advanced Duplicator is not allowed!")
-		return false
+
+	local DisabledTools = {}
+	DisabledTools[1] = {"adv_duplicator", "Advanced duplicator"}
+	DisabledTools[2] = {"wire_detonator", "Wire Detonator"}
+	DisabledTools[3] = {"wire_explosive", "Wire Explosive"}
+	DisabledTools[4] = {"wire_igniter", "Wire Igniter"}
+	DisabledTools[5] = {"wire_turret", "Wire Turret"}
+	DisabledTools[6] = {"dynamite", "Dynamite"}
+	DisabledTools[7] = {"turret", "Turret"}
+	DisabledTools[8] = {"ignite", "Igniter"}
+	DisabledTools[9] = {"wire_simple_explosive", "Simple Explosive"}
+	
+	for k,v in pairs(DisabledTools) do
+		if (toolmode == v[1]) then
+			ply:ChatPrint(v[2].." is disabled!")
+			return false
+		end
 	end
 	return true
 end
