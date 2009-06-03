@@ -158,7 +158,7 @@ end
   the teams are building traps
 ---------------------------------------------------------*/
 function GM:SpawnMenuOpen()
-	if (GM_Game == "Trap Building" and LocalPlayer():Team() != TEAM_GUEST) then
+	if (GM_Game == "Trap Building" and LocalPlayer():Team() != TEAM_SPECTATORS) then
 		return true
 	else
 		return false

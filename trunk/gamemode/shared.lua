@@ -9,9 +9,9 @@ GM.Website = "N/A"
    Desc: Note - HAS to be shared.
 ---------------------------------------------------------*/
 function GM:CreateTeams()
-	TEAM_GUEST = 1
-	team.SetUp( TEAM_GUEST, "Guests", Color( 125, 125, 125, 255 ) )
-	team.SetSpawnPoint( TEAM_GUEST, "info_player_counterterrorist" )
+	TEAM_SPECTATORS = 1
+	team.SetUp( TEAM_SPECTATORS, "Guests", Color( 125, 125, 125, 255 ) )
+	team.SetSpawnPoint( TEAM_SPECTATORS, "info_player_counterterrorist" )
 	
 	TEAM_A = 2
 	team.SetUp( TEAM_A, "Team A", Color( 225, 40, 40 , 225 ) )

@@ -54,7 +54,7 @@ end
   spawns for the first time
 ---------------------------------------------------------*/
 function GM:PlayerInitialSpawn( ply )
-	ply:SetTeam(TEAM_GUEST)
+	ply:SetTeam(TEAM_SPECTATORS)
 	ply:ConCommand( "team_menu" )
 end 
 
@@ -69,7 +69,7 @@ for k,ply in pairs(player.GetAll()) do
 end
 function PlayerChat( ply, text, toall )
 	if (text == "/ready") then
-		if (ply["ready"] != 1 and ply:Team() != TEAM_GUEST) then
+		if (ply["ready"] != 1 and ply:Team() != TEAM_SPECTATORS) then
 			GAME_PLAYERVOTES = GAME_PLAYERVOTES + 1
 			mssg = tostring(#player.GetAll() - GAME_PLAYERVOTES).." votes left to change GamePlay"
 			printAction( mssg )
@@ -155,14 +155,14 @@ end
 ---------------------------------------------------------*/
 function CheckSpec( ply, newteam )
 	for k,pl in pairs(player.GetAll()) do
-		if (pl:Team() == TEAM_GUEST and pl["spectate"] == ply or pl:Team() == TEAM_GUEST and newteam == TEAM_GUEST) then
+		if (pl:Team() == TEAM_SPECTATORS and pl["spectate"] == ply or pl:Team() == TEAM_SPECTATORS and newteam == TEAM_SPECTATORS) then
 			pl:Spectate(6)
 		end
 	end
 end
 			
 function GM:PlayerDisconnected( ply )
-	ply:SetTeam(TEAM_GUEST)
+	ply:SetTeam(TEAM_SPECTATORS)
 	CheckSpec( ply, NONE )
 	CheckPlyNum()
 end
@@ -189,8 +189,10 @@ function GM:PlayerDeathThink( ply )
 			end
 		end
 		return false
-	elseif (GAME_STATUS == "Trap Building" and ply:Team() != TEAM_GUEST) then
-		ply:Spawn()
+	elseif (GAME_STATUS == "Trap Building" and ply:Team() != TEAM_SPECTATORS) then
+		timer.Create( "respawn", 2, 0, function()
+			ply:Spawn()
+		end)
 	end
 end
 
@@ -250,7 +252,7 @@ concommand.Add("-teamtalk", function( ply )
 end)
 
 function GM:CanPlayerSuicide( ply )
-	if (ply:Team() == TEAM_GUEST) then
+	if (ply:Team() == TEAM_SPECTATORS) then
 		return false
 	end
 	return true
@@ -329,7 +331,7 @@ function GM:PlayerSpawnSWEP( ply, wep )
 end
 
 function GM:PlayerUse( ply, ent )
-	if (ply:Team() == TEAM_GUEST) then
+	if (ply:Team() == TEAM_SPECTATORS) then
 		return false
 	end
 	return true
@@ -339,11 +341,11 @@ local specmode = 3
 local index = 1
 
 function GM:KeyPress( ply, key )
-	if (ply:Team() == TEAM_GUEST) then
+	if (ply:Team() == TEAM_SPECTATORS) then
 		local players = player.GetAll()
 		local specmodes = { 4, 5, 6 }
 		for k,v in pairs(players) do
-			if (v:Team() == TEAM_GUEST) then
+			if (v:Team() == TEAM_SPECTATORS) then
 				table.remove(players, k)
 			end
 		end
@@ -388,7 +390,7 @@ function GM:PlayerSpawn( ply )
 		ply["ready"] = 0
 		ply:ConCommand("-menu")
 	end
-	if ply:Team() == TEAM_GUEST then
+	if ply:Team() == TEAM_SPECTATORS then
 		ply:StripWeapons()
 	elseif ply:Team() == TEAM_A and GAME_STATUS == "Trap Building" then
 		ply:UnSpectate()
@@ -425,8 +427,8 @@ end
   Set player weapons when they join the team
 ---------------------------------------------------------*/
 function team_1( ply )
-	CheckSpec(ply, TEAM_GUEST)
-	ply:SetTeam(TEAM_GUEST)
+	CheckSpec(ply, TEAM_SPECTATORS)
+	ply:SetTeam(TEAM_SPECTATORS)
 	mssg = ply:Name().." joined Spectator"
 	printAction( mssg )
 	ply:Spawn()
