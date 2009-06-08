@@ -190,9 +190,7 @@ function GM:PlayerDeathThink( ply )
 		end
 		return false
 	elseif (GAME_STATUS == "Trap Building" and ply:Team() != TEAM_SPECTATORS) then
-		timer.Create( "respawn", 2, 0, function()
 			ply:Spawn()
-		end)
 	end
 end
 
@@ -230,10 +228,15 @@ function GM:DoPlayerDeath( ply )
 end
 
 function GM:PlayerCanHearPlayersVoice( listener, talker )
-	if(talker["alltalk"] or listener:Team() != talker:Team()) then
+	if(talker["alltalk"]) then
 		return true
+	else
+		if(listener:Team() != talker:Team()) then
+			return false
+		else
+			return true
+		end
 	end
-	return false
 end
 
 concommand.Add("+teamtalk", function( ply )
@@ -256,7 +259,7 @@ end
 function GM:CanTool( ply, tr, toolmode )
 
 	local DisabledTools = {}
-	DisabledTools[1] = {"adv_duplicator", "Advanced Duplicator"}
+	DisabledTools[1] = {"adv_duplicator", "Advanced duplicator"}
 	DisabledTools[2] = {"wire_detonator", "Wire Detonator"}
 	DisabledTools[3] = {"wire_explosive", "Wire Explosive"}
 	DisabledTools[4] = {"wire_igniter", "Wire Igniter"}
@@ -264,7 +267,6 @@ function GM:CanTool( ply, tr, toolmode )
 	DisabledTools[6] = {"dynamite", "Dynamite"}
 	DisabledTools[7] = {"turret", "Turret"}
 	DisabledTools[8] = {"ignite", "Igniter"}
-	DisabledTools[9] = {"wire_simple_explosive", "Wire Simple Explosive"}
 	
 	for k,v in pairs(DisabledTools) do
 		if (toolmode == v[1]) then
@@ -377,7 +379,7 @@ function GM:KeyPress( ply, key )
 	end
 end
 /*---------------------------------------------------------
-  Sets player weapons according to their team
+  Sets player weapons acording to theyr team
   when they spawn
 ---------------------------------------------------------*/
 function GM:PlayerSpawn( ply )
